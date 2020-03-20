@@ -6,28 +6,38 @@ CORBO_BASE_PATH = "/Users/michi/tmp/corbo/"
 RESULT_FOLDER_NAME = CORBO_BASE_PATH + "result_item_list/"
 #SOURCE_FILE_NAME = CORBO_BASE_PATH + "CORBO items gen csv source.csv"
 SOURCE_FILE_NAME = CORBO_BASE_PATH + "CORBO Items List4.csv"
-DEST_FILE_NAME = RESULT_FOLDER_NAME + "CORBO items dst.csv"
+DEST_FILE_NAME = RESULT_FOLDER_NAME + "pdp_dim_weight.csv"
 
 
 table = CSV.table(SOURCE_FILE_NAME)
 p table.headers
+
+specs = []
 
 table.each do |row|
   if 'Y' == row[:update] then
     if 'f' == row[:flag] then
       handle = row[:sku]
       weight_g = row[:net_weight]
-      weight_o = row[:weight_oz]
+      weight_o = row[:weight_oz].round(1)
       h_cm = row[:h_cm]
       w_cm = row[:w_cm]
       d_cm = row[:d_cm]
-      h_in = row[:h_in]
-      w_in = row[:w_in]
-      d_in = row[:d_in]
+      h_in = row[:h_in].round(1)
+      w_in = row[:w_in].round(1)
+      d_in = row[:d_in].round(1)
 
-      dimension = "<ul><li>Size #{h_cm}cm H x #{w_cm}cm W x #{d_cm}cm D | #{h_in}in H x #{w_in}in W x #{d_in}in D</li>"
-      weight = "<li>Weight #{weight_g}g | #{weight_o}oz</li></ul>"
+      dimension = "<ul>\n<li>Size #{h_cm}cm H x #{w_cm}cm W x #{d_cm}cm D | #{h_in}in H x #{w_in}in W x #{d_in}in D</li>\n"
+      weight = "<li>Weight #{weight_g}g | #{weight_o}oz</li>\n</ul>"
       print "#{handle}\t#{row[:product_display_name]}\t#{dimension}#{weight}\tCORBO.\t#{row[:category]}\n"
+      specs << [handle, "#{dimension}#{weight}"]
     end
+  end
+end
+
+CSV.open(DEST_FILE_NAME, "wb") do |csv|
+  csv << ["Handle", "Body"]
+  specs.each do |spec|
+    csv << [spec[0], spec[1]]
   end
 end
