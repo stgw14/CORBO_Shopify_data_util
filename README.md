@@ -1,5 +1,5 @@
 # CORBO_Shopify_data_util
-CORBO. Global EC登録用データ作成ツール
+CORBO. Global EC登録用データ作成ツール。主に[マスタデータCSVファイル](https://github.com/stgw14/CORBO_Shopify_data/tree/master/generate_shopify_import_data_from_this_master)を入力として、Shopify商品インポートデータ形式のCSVを出力する。
 
 ## Files
 1. **gen_folders.rb**
